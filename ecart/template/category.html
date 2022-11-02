@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block metadescription %}
+    {% if category %}
+        {{ category.description|truncatewords:155 }}
+    {% else %}
+        Welcome to ECART Shopping.......
+    {% endif %}
+{% endblock %}
+{% block title %}
+    {% if category %}
+        {{ category.name }} - Ecart
+    {% else %}
+        New trending collections...  -Ecart
+    {% endif %}
+{% endblock %}
+{% block content %}
+{% if category %}
+    <div>
+        <div>
+            <p><a href="{% url 'ecartapp:allProdcat' %}">Product collections</a></p>
+        </div>
+    </div>
+{% endif %}
+<div>
+    <div>
+        {% if category %}
+        <img src="{{ category.image.url }}"  alt="{{category.name}}">
+    </div>
+</div>
+<br>
+<div>
+    <h1>{{ category.name }}</h1>
+    <p>{{ category.description }}</p>
+</div>
+    {% else %}
+        <div>
+            <img class="my_image my_image_padding" src="{% static 'img/ban31.png' %}" alt="our products" width="auto;" height="auto;">
+        </div>
+        <br>
+        <div>
+            <h1 class="text-center my_title">Our collections</h1>
+            <p class="text-justify">
+                We pride ourselves on creating in market, and are proud to present a selection of products.
+                Each brings with them a brand new element of surprise and interaction to enhance the experience of the receiver, whatever their age! Take a look !
+            </p>
+        </div>
+    {% endif %}
+<div class="container">
+    <div class="row mx-auto">
+        {% for p in products.object_list %}
+        <div class="my_bottom_margin col-9 col-sm-12 col-md-4 col-md-12 col-lg-4">
+            <div class="card text-center" >
+                <a href="{{ p.get_url }}"><img class="card-img-top my_image" src="{{ p.image.url}}" alt="{{p.name}}" width="100px;" height="auto;"></a>
+                <div class="card-body">
+                    <h6>{{ p.name }}</h6>
+                    <p class="card-text"> Rs: {{ p.price }}</p>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    <div class="mx-auto">
+        {% if products.paginator.num_pages > 1 %}
+
+        <hr>
+        <div class="text-center">
+            {% for pg in products.paginator.page_range %}
+            <a href="?page={{ pg }}" class="btn btn-light btn-sm {% if products.number == pg %} active {% endif %}">{{pg}}</a>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+    <br>
+</div>
+{% endblock %}
